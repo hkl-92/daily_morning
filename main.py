@@ -9,17 +9,27 @@ import random
 today = datetime.now()
 start_date = os.environ['START_DATE']
 city = os.environ['CITY']
+city1 = os.environ['CITY1']
+
 birthday = os.environ['BIRTHDAY']
+birthday1 = os.environ['BIRTHDAY1']
 
 app_id = os.environ["APP_ID"]
 app_secret = os.environ["APP_SECRET"]
 
 user_id = os.environ["USER_ID"]
+user_id1 = os.environ["USER_ID1"]
 template_id = os.environ["TEMPLATE_ID"]
 
 
 def get_weather():
   url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city
+  res = requests.get(url).json()
+  weather = res['data']['list'][0]
+  return weather['weather'], math.floor(weather['temp'])
+
+def get_weather1():
+  url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city1
   res = requests.get(url).json()
   weather = res['data']['list'][0]
   return weather['weather'], math.floor(weather['temp'])
@@ -30,6 +40,12 @@ def get_count():
 
 def get_birthday():
   next = datetime.strptime(str(date.today().year) + "-" + birthday, "%Y-%m-%d")
+  if next < datetime.now():
+    next = next.replace(year=next.year + 1)
+  return (next - today).days
+
+def get_birthday1():
+  next = datetime.strptime(str(date.today().year) + "-" + birthday1, "%Y-%m-%d")
   if next < datetime.now():
     next = next.replace(year=next.year + 1)
   return (next - today).days
@@ -48,6 +64,7 @@ client = WeChatClient(app_id, app_secret)
 
 wm = WeChatMessage(client)
 wea, temperature = get_weather()
-data = {"weather":{"value":wea},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
+wea1, temperature1 = get_weather1()
+data = {"weather":{"value":wea},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()},"weather1":{"value":wea1},"temperature1":{"value":temperature1},"birthday_left1":{"value":get_birthday1()}}
 res = wm.send_template(user_id, template_id, data)
 print(res)
