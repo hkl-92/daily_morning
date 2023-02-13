@@ -24,16 +24,38 @@ template_id = os.environ["TEMPLATE_ID"]
 
 
 def get_weather():
-  url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city
+  # url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city
+  # res = requests.get(url).json()
+  # weather = res['data']['list'][0]
+  # return weather['weather'], math.floor(weather['temp'])
+  url = "http://t.weather.sojson.com/api/weather/city/101280601"
   res = requests.get(url).json()
-  weather = res['data']['list'][0]
-  return weather['weather'], math.floor(weather['temp'])
+  # res.encoding='utf-8'
+  # resp = res.json()
+  # print(res)
+  weathers = res['data']
+  tem = weathers['wendu'] + '℃'
+  # print(tem)
+  weather = weathers['forecast'][0]['type']
+  # print(weather)
+  return weather, tem
 
 def get_weather1():
-  url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city1
+  # url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city1
+  # res = requests.get(url).json()
+  # weather = res['data']['list'][0]
+  # return weather['weather'], math.floor(weather['temp'])
+  url = "http://t.weather.sojson.com/api/weather/city/101280601"
   res = requests.get(url).json()
-  weather = res['data']['list'][0]
-  return weather['weather'], math.floor(weather['temp'])
+  # res.encoding='utf-8'
+  # resp = res.json()
+  # print(res)
+  weathers = res['data']
+  tem = weathers['wendu'] + '℃'
+  # print(tem)
+  weather = weathers['forecast'][0]['type']
+  # print(weather)
+  return weather, tem
 
 def get_count():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d")
