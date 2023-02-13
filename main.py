@@ -45,7 +45,7 @@ def get_weather1():
   # res = requests.get(url).json()
   # weather = res['data']['list'][0]
   # return weather['weather'], math.floor(weather['temp'])
-  url = "http://t.weather.sojson.com/api/weather/city/101280601"
+  url = "http://t.weather.sojson.com/api/weather/city/101270101"
   res = requests.get(url).json()
   # res.encoding='utf-8'
   # resp = res.json()
