@@ -30,6 +30,7 @@ jobs:
       USER_ID: ${{ secrets.USER_ID }}
       USER_ID1: ${{ secrets.USER_ID1 }}
       START_DATE: ${{ secrets.START_DATE }}
+      START_MARRY: ${{ secrets.START_MARRY }}
       MARRY: ${{ secrets.MARRY }}
       BIRTHDAY: ${{ secrets.BIRTHDAY }}
       BIRTHDAY1: ${{ secrets.BIRTHDAY1 }}
