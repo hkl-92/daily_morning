@@ -16,8 +16,8 @@ city1 = os.environ['CITY1']
 birthday = os.environ['BIRTHDAY']
 #BIRTHDAY1：12-11
 birthday1 = os.environ['BIRTHDAY1']
-#START_DARRY：2023-01-09
-start_marry = os.environ['START_DARRY']
+#START_MARRY：2023-01-09
+start_marry = os.environ['START_MARRY']
 #MARRY：01-09
 marry = os.environ['MARRY']
 #测试公众号信息：APP_ID、APP_SECRET
