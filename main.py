@@ -3,116 +3,119 @@ import math
 from wechatpy import WeChatClient
 from wechatpy.client.api import WeChatMessage, WeChatTemplate
 import requests
+from bs4 import BeautifulSoup
 import os
 import random
 
 today = datetime.now()
-#START_DATE：2022-02-03
 start_date = os.environ['START_DATE']
-#城市：深圳、成都
 city = os.environ['CITY']
 city1 = os.environ['CITY1']
-#BIRTHDAY：09-18
+
 birthday = os.environ['BIRTHDAY']
-#BIRTHDAY1：12-11
 birthday1 = os.environ['BIRTHDAY1']
-#START_MARRY：2023-01-09
-start_marry = os.environ['START_MARRY']
-#MARRY：01-09
 marry = os.environ['MARRY']
-#测试公众号信息：APP_ID、APP_SECRET
+
 app_id = os.environ["APP_ID"]
 app_secret = os.environ["APP_SECRET"]
-#关注公众号用户信息：USER_ID、USER_ID1
+
 user_id = os.environ["USER_ID"]
 user_id1 = os.environ["USER_ID1"]
-#模板ID：TEMPLATE_ID
 template_id = os.environ["TEMPLATE_ID"]
 
-#获取深圳温度、天气
+
 def get_weather():
-  # url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city
-  # res = requests.get(url).json()
-  # weather = res['data']['list'][0]
-  # return weather['weather'], math.floor(weather['temp'])
-  url = "http://t.weather.sojson.com/api/weather/city/101280601"
-  res = requests.get(url).json()
-  # res.encoding='utf-8'
-  # resp = res.json()
-  # print(res)
-  weathers = res['data']
-  tem = weathers['wendu'] + '℃'
-  # print(tem)
-  weather = weathers['forecast'][0]['type']
-  # print(weather)
+  # 设置深圳城市编码
+  city_code = '101280601'
+  # 深圳天气的 url 地址
+  url = 'http://www.weather.com.cn/weather1d/{}.shtml'.format(city_code)
+  #返回的内容出现乱码，可能是因为中文编码格式不一致所致。这个问题可以通过设置 requests 库的 headers 来解决。
+  #在 headers 中添加 accept-encoding 和 user-agent 等参数，防止被反爬虫机制拦截，使请求正常工作。之后再解析页面内容即可正常显示中文。
+  # 设置请求头 headers
+  headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+    'Accept-Encoding': 'gzip, deflate',
+  }
+  # 发送请求获取响应
+  response = requests.get(url, headers=headers)
+  # 使用 BeautifulSoup 解析响应内容
+  soup = BeautifulSoup(response.content, 'html.parser')
+  # 提取需要的天气信息
+  tagToday = soup.find('p', class_="tem")  # 当前温度
+  tagWind = soup.find('p', class_="win")  # 风力信息
+  tagSoup = soup.find('p', class_="wea")  # 天气信息
+  # 输出温度信息
+  tem = tagToday.text
+  # 输出天气信息
+  weather = tagSoup.text
+  # 输出风力信息
+  win = tagWind.text
   return weather, tem
 
-#获取成都温度、天气
 def get_weather1():
-  # url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city1
-  # res = requests.get(url).json()
-  # weather = res['data']['list'][0]
-  # return weather['weather'], math.floor(weather['temp'])
-  url = "http://t.weather.sojson.com/api/weather/city/101270101"
-  res = requests.get(url).json()
-  # res.encoding='utf-8'
-  # resp = res.json()
-  # print(res)
-  weathers = res['data']
-  tem = weathers['wendu'] + '℃'
-  # print(tem)
-  weather = weathers['forecast'][0]['type']
-  # print(weather)
+  # 设置成都城市编码
+  city_code = '101270101'
+  #构造城市对应的 url 地址
+  url = 'http://www.weather.com.cn/weather1d/{}.shtml'.format(city_code)
+  # 设置请求头 headers
+  headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+    'Accept-Encoding': 'gzip, deflate',
+  }
+  # 发送请求获取响应
+  response = requests.get(url, headers=headers)
+  # 使用 BeautifulSoup 解析响应内容
+  soup = BeautifulSoup(response.content, 'html.parser')
+  # 提取需要的天气信息
+  tagToday = soup.find('p', class_="tem")  # 当前温度
+  tagWind = soup.find('p', class_="win")  # 风力信息
+  tagSoup = soup.find('p', class_="wea")  # 天气信息
+  # 输出温度信息
+  tem = tagToday.text
+  # 输出天气信息
+  weather = tagSoup.text
+  # 输出风力信息
+  win = tagWind.text
   return weather, tem
 
-#获取START_DATE天数
 def get_count():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d")
   return delta.days
 
-#获取START_MARRY天数
-def get_start_marry():
-  delta = today - datetime.strptime(start_marry, "%Y-%m-%d")
-  return delta.days
-
-#获取BIRTHDAY距今天数
 def get_birthday():
   next = datetime.strptime(str(date.today().year) + "-" + birthday, "%Y-%m-%d")
   if next < datetime.now():
     next = next.replace(year=next.year + 1)
   return (next - today).days
 
-#获取BIRTHDAY1距今天数
 def get_birthday1():
   next = datetime.strptime(str(date.today().year) + "-" + birthday1, "%Y-%m-%d")
   if next < datetime.now():
     next = next.replace(year=next.year + 1)
   return (next - today).days
 
-#获取MARRY距今天数
 def get_marry():
   next = datetime.strptime(str(date.today().year) + "-" + marry, "%Y-%m-%d")
   if next < datetime.now():
     next = next.replace(year=next.year + 1)
   return (next - today).days
 
-#获取短语
 def get_words():
   words = requests.get("https://api.shadiao.pro/chp")
   if words.status_code != 200:
     return get_words()
   return words.json()['data']['text']
 
-#获取字体颜色
 def get_random_color():
   return "#%06x" % random.randint(0, 0xFFFFFF)
 
 
 client = WeChatClient(app_id, app_secret)
+
 wm = WeChatMessage(client)
 wea, temperature = get_weather()
 wea1, temperature1 = get_weather1()
-data = {"weather":{"value":wea},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()},"weather1":{"value":wea1},"temperature1":{"value":temperature1},"birthday_left1":{"value":get_birthday1()},"marry":{"value":get_marry()},"start_marry":{"value":get_start_marry()}}
+data = {"weather":{"value":wea},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()},"weather1":{"value":wea1},"temperature1":{"value":temperature1},"birthday_left1":{"value":get_birthday1()},"marry":{"value":get_marry()}}
 res = wm.send_template(user_id, template_id, data)
 res1 = wm.send_template(user_id1, template_id, data)
 print(res)
