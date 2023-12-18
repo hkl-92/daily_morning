@@ -46,7 +46,7 @@ def get_weather():
   tagWind = soup.find('p', class_="win")  # 风力信息
   tagSoup = soup.find('p', class_="wea")  # 天气信息
   # 输出温度信息
-  tem = str(int((tagToday.text)[0:3])) + '℃'
+  tem = str(int((tagToday.text)[0:2])) + '℃'
   # 输出天气信息
   weather = tagSoup.text
   # 输出风力信息
