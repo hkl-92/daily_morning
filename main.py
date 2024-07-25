@@ -28,10 +28,11 @@ template_id = os.environ["TEMPLATE_ID"]
 def get_weather():
   # 设置深圳城市编码
   city_code = '101280601'
+  keys = 'bc7bec9e1c2e40d9acf46d91303db73a'
   # 深圳天气的 url 地址
-  url = 'http://www.weather.com.cn/weather1d/{}.shtml'.format(city_code)
-  #返回的内容出现乱码，可能是因为中文编码格式不一致所致。这个问题可以通过设置 requests 库的 headers 来解决。
-  #在 headers 中添加 accept-encoding 和 user-agent 等参数，防止被反爬虫机制拦截，使请求正常工作。之后再解析页面内容即可正常显示中文。
+  url = 'https://devapi.qweather.com/v7/weather/now?location={}&key={}'.format(city_code, keys)
+  # 返回的内容出现乱码，可能是因为中文编码格式不一致所致。这个问题可以通过设置 requests 库的 headers 来解决。
+  # 在 headers 中添加 accept-encoding 和 user-agent 等参数，防止被反爬虫机制拦截，使请求正常工作。之后再解析页面内容即可正常显示中文。
   # 设置请求头 headers
   headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
@@ -39,25 +40,35 @@ def get_weather():
   }
   # 发送请求获取响应
   response = requests.get(url, headers=headers)
-  # 使用 BeautifulSoup 解析响应内容
-  soup = BeautifulSoup(response.content, 'html.parser')
-  # 提取需要的天气信息
-  tagToday = soup.find('p', class_="tem")  # 当前温度
-  tagWind = soup.find('p', class_="win")  # 风力信息
-  tagSoup = soup.find('p', class_="wea")  # 天气信息
-  # 输出温度信息
-  tem = str(int((tagToday.text)[0:2])) + '℃'
-  # 输出天气信息
-  weather = tagSoup.text
-  # 输出风力信息
-  win = tagWind.text
+  if response.status_code == 200:
+    # 解析JSON响应
+    weather_data = response.json()
+    # 提取所需数据
+
+    temperature = weather_data['now']['temp']
+    condition = weather_data['now']['text']
+    Wind = weather_data['now']['windSpeed']
+    # 输出温度信息
+    # tem = str(int(temperature)) + '℃'
+    tem = temperature + '℃'
+    # 输出天气信息
+    weather = condition
+    # 输出风力信息
+    win = Wind
+
+  else:
+    print("无法获取天气数据")
+
   return weather, tem
 
 def get_weather1():
   # 设置成都城市编码
   city_code = '101270101'
-  #构造城市对应的 url 地址
-  url = 'http://www.weather.com.cn/weather1d/{}.shtml'.format(city_code)
+  keys = 'bc7bec9e1c2e40d9acf46d91303db73a'
+  # 成都天气的 url 地址
+  url = 'https://devapi.qweather.com/v7/weather/now?location={}&key={}'.format(city_code, keys)
+  # 返回的内容出现乱码，可能是因为中文编码格式不一致所致。这个问题可以通过设置 requests 库的 headers 来解决。
+  # 在 headers 中添加 accept-encoding 和 user-agent 等参数，防止被反爬虫机制拦截，使请求正常工作。之后再解析页面内容即可正常显示中文。
   # 设置请求头 headers
   headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
@@ -65,18 +76,25 @@ def get_weather1():
   }
   # 发送请求获取响应
   response = requests.get(url, headers=headers)
-  # 使用 BeautifulSoup 解析响应内容
-  soup = BeautifulSoup(response.content, 'html.parser')
-  # 提取需要的天气信息
-  tagToday = soup.find('p', class_="tem")  # 当前温度
-  tagWind = soup.find('p', class_="win")  # 风力信息
-  tagSoup = soup.find('p', class_="wea")  # 天气信息
-  # 输出温度信息
-  tem = str(int((tagToday.text)[0:2])) + '℃'
-  # 输出天气信息
-  weather = tagSoup.text
-  # 输出风力信息
-  win = tagWind.text
+  if response.status_code == 200:
+    # 解析JSON响应
+    weather_data = response.json()
+    # 提取所需数据
+
+    temperature = weather_data['now']['temp']
+    condition = weather_data['now']['text']
+    Wind = weather_data['now']['windSpeed']
+    # 输出温度信息
+    # tem = str(int(temperature)) + '℃'
+    tem = temperature + '℃'
+    # 输出天气信息
+    weather = condition
+    # 输出风力信息
+    win = Wind
+
+  else:
+    print("无法获取天气数据")
+
   return weather, tem
 
 def get_count():
