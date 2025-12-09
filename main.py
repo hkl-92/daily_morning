@@ -29,8 +29,8 @@ def get_weather():
   # 设置深圳城市编码
   city_code = '101280601'
   keys = 'bc7bec9e1c2e40d9acf46d91303db73a'
-  # 深圳天气的 url 地址
-  url = 'https://devapi.qweather.com/v7/weather/now?location={}&key={}'.format(city_code, keys)
+  # 深圳天气的 url 地址 原：devapi.qweather.com
+  url = 'https://nq7p3xbpph.re.qweatherapi.com/v7/weather/now?location={}&key={}'.format(city_code, keys)
   # 返回的内容出现乱码，可能是因为中文编码格式不一致所致。这个问题可以通过设置 requests 库的 headers 来解决。
   # 在 headers 中添加 accept-encoding 和 user-agent 等参数，防止被反爬虫机制拦截，使请求正常工作。之后再解析页面内容即可正常显示中文。
   # 设置请求头 headers
@@ -65,8 +65,8 @@ def get_weather1():
   # 设置成都城市编码
   city_code = '101270101'
   keys = 'bc7bec9e1c2e40d9acf46d91303db73a'
-  # 成都天气的 url 地址
-  url = 'https://devapi.qweather.com/v7/weather/now?location={}&key={}'.format(city_code, keys)
+  # 成都天气的 url 地址 原：devapi.qweather.com
+  url = 'https://nq7p3xbpph.re.qweatherapi.com/v7/weather/now?location={}&key={}'.format(city_code, keys)
   # 返回的内容出现乱码，可能是因为中文编码格式不一致所致。这个问题可以通过设置 requests 库的 headers 来解决。
   # 在 headers 中添加 accept-encoding 和 user-agent 等参数，防止被反爬虫机制拦截，使请求正常工作。之后再解析页面内容即可正常显示中文。
   # 设置请求头 headers
